@@ -601,3 +601,12 @@ PM 6:53:55 [vite] hmr update /src/pages/VdiRequest.tsx, /src/index.css
 PM 6:57:47 [vite] hmr update /src/context/LanguageContext.tsx, /src/index.css
 PM 6:57:47 [vite] hmr invalidate /src/context/LanguageContext.tsx Could not Fast Refresh ("useLanguage" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
 PM 6:57:47 [vite] hmr update /src/App.tsx, /src/index.css, /src/components/Layout.tsx, /src/pages/VdiRequest.tsx
+PM 7:01:36 [vite] hmr update /src/context/LanguageContext.tsx, /src/index.css
+PM 7:01:37 [vite] hmr invalidate /src/context/LanguageContext.tsx Could not Fast Refresh ("useLanguage" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+PM 7:01:37 [vite] hmr update /src/App.tsx, /src/index.css, /src/components/Layout.tsx, /src/pages/VdiRequest.tsx
+PM 7:02:40 [vite] hmr update /src/pages/Dashboard.tsx, /src/index.css
+PM 7:03:31 [vite] hmr update /src/context/LanguageContext.tsx, /src/index.css
+PM 7:03:39 [vite] hmr update /src/pages/Dashboard.tsx, /src/index.css
+PM 7:04:23 [vite] hmr update /src/pages/Users.tsx, /src/index.css
+PM 7:04:34 [vite] hmr update /src/context/LanguageContext.tsx, /src/index.css
+PM 7:05:21 [vite] hmr update /src/pages/ThreatsPage.tsx, /src/index.css

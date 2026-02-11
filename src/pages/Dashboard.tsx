@@ -1,13 +1,15 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useData } from '../context/DataContext';
 import { RiskGauge } from '../components/RiskGauge';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell, Legend } from 'recharts';
-import { TrendingUp, Users, MapPin, AlertCircle, X, Smartphone, ShieldAlert, LayoutGrid } from 'lucide-react';
+import { TrendingUp, Users, MapPin, AlertCircle, X, Smartphone, ShieldAlert } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useLanguage } from '../context/LanguageContext';
 
 export const Dashboard = () => {
     const { users, orgRiskIndex, riskTrendData, riskTrend30Days, threatMapData, devicePlatformData, threatTypeData, riskHeatmapData } = useData();
+    const { t, language } = useLanguage();
     const [showTrendModal, setShowTrendModal] = useState(false);
     const [trendPeriod, setTrendPeriod] = useState<'24h' | '30d'>('30d');
 
@@ -36,13 +38,13 @@ export const Dashboard = () => {
             <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
-                        WOI On-Prem | 조직 위험 지수
+                        {t('dash.title')}
                     </h1>
-                    <p className="text-gray-600 dark:text-gray-400 mt-1">조직 위험 지수 대시보드</p>
+                    <p className="text-gray-600 dark:text-gray-400 mt-1">{t('dash.subtitle')}</p>
                 </div>
                 <div className="text-right">
-                    <div className="text-sm text-gray-600 dark:text-gray-500">마지막 업데이트</div>
-                    <div className="text-gray-700 dark:text-gray-300">{new Date(orgRiskIndex.lastUpdated).toLocaleString('ko-KR')}</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-500">{t('dash.last_update')}</div>
+                    <div className="text-gray-700 dark:text-gray-300">{new Date(orgRiskIndex.lastUpdated).toLocaleString(language === 'ko' ? 'ko-KR' : 'en-US')}</div>
                 </div>
             </div>
 
@@ -57,7 +59,7 @@ export const Dashboard = () => {
                 >
                     <div className="flex items-center gap-2 mb-4">
                         <AlertCircle className="w-5 h-5 text-enterprise-500" />
-                        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">조직 위험 지수</h2>
+                        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">{t('dash.org_risk')}</h2>
                     </div>
                     <div className="flex justify-center">
                         <RiskGauge score={orgRiskIndex.score} size="lg" />
@@ -67,7 +69,7 @@ export const Dashboard = () => {
                             onClick={() => setShowTrendModal(true)}
                             className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-orange-500/10 border border-orange-500/20 hover:bg-orange-500/20 transition-colors cursor-pointer"
                         >
-                            <span className="text-orange-500 font-medium">증가 추세 (30일)</span>
+                            <span className="text-orange-500 font-medium">{t('dash.trend_30d')}</span>
                         </button>
                     </div>
                 </motion.div>
@@ -82,25 +84,27 @@ export const Dashboard = () => {
                     <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-2">
                             <Users className="w-5 h-5 text-enterprise-500" />
-                            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">사용자 위험 현황</h2>
+                            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">{t('dash.user_risk_status')}</h2>
                         </div>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {/* Risk Heatmap */}
                         <div>
-                            <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-3">부서/직급별 위험도 (Heatmap)</h3>
+                            <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-3">{t('dash.heatmap_title')}</h3>
                             <div className="grid grid-cols-4 gap-1">
                                 <div className="text-xs text-gray-500"></div>
-                                <div className="text-xs text-gray-500 text-center font-medium">임원</div>
-                                <div className="text-xs text-gray-500 text-center font-medium">팀장</div>
-                                <div className="text-xs text-gray-500 text-center font-medium">사원</div>
+                                <div className="text-xs text-gray-500 text-center font-medium">{t('dash.role_exec')}</div>
+                                <div className="text-xs text-gray-500 text-center font-medium">{t('dash.role_lead')}</div>
+                                <div className="text-xs text-gray-500 text-center font-medium">{t('dash.role_staff')}</div>
 
-                                {['영업팀', 'IT팀', '재무팀', 'HR팀', '마케팅팀'].map(dept => (
-                                    <>
-                                        <div className="text-xs text-gray-500 font-medium flex items-center">{dept}</div>
-                                        {['임원', '팀장', '사원'].map(role => {
-                                            const data = riskHeatmapData.find(d => d.x === dept && d.y === role);
+                                {['sales', 'it', 'finance', 'hr', 'marketing'].map(deptKey => (
+                                    <React.Fragment key={deptKey}>
+                                        <div className="text-xs text-gray-500 font-medium flex items-center">{t(`dash.dept_${deptKey}`)}</div>
+                                        {['Exec', 'Lead', 'Staff'].map((role, i) => {
+                                            const roleMap = ['임원', '팀장', '사원'];
+                                            const deptMap: Record<string, string> = { sales: '영업팀', it: 'IT팀', finance: '재무팀', hr: 'HR팀', marketing: '마케팅팀' };
+                                            const data = riskHeatmapData.find(d => d.x === deptMap[deptKey] && d.y === roleMap[i]);
                                             const value = data ? data.value : 0;
                                             let bgClass = 'bg-green-100 dark:bg-green-900/20';
                                             if (value >= 80) bgClass = 'bg-red-500 text-white';
@@ -110,22 +114,22 @@ export const Dashboard = () => {
 
                                             return (
                                                 <div
-                                                    key={`${dept}-${role}`}
+                                                    key={`${deptKey}-${role}`}
                                                     className={`h-8 rounded flex items-center justify-center text-xs font-medium transition-all hover:scale-105 cursor-default ${bgClass}`}
-                                                    title={`${dept} ${role}: ${value}`}
+                                                    title={`${t(`dash.dept_${deptKey}`)} ${t(`dash.role_${role.toLowerCase()}`)}: ${value}`}
                                                 >
                                                     {value}
                                                 </div>
                                             );
                                         })}
-                                    </>
+                                    </React.Fragment>
                                 ))}
                             </div>
                         </div>
 
                         {/* Top Risky Users List */}
                         <div>
-                            <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-3">고위험 사용자 Top 5</h3>
+                            <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-3">{t('dash.top_risky_users')}</h3>
                             <div className="space-y-2">
                                 {topRiskyUsers.map((user, index) => (
                                     <Link
@@ -164,7 +168,7 @@ export const Dashboard = () => {
                 >
                     <div className="flex items-center gap-2 mb-4">
                         <Smartphone className="w-5 h-5 text-enterprise-500" />
-                        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">단말 위험 현황 (플랫폼별)</h2>
+                        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">{t('dash.device_risk_platform')}</h2>
                     </div>
                     <ResponsiveContainer width="100%" height={240}>
                         <BarChart data={devicePlatformData} layout="vertical" margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
@@ -175,9 +179,9 @@ export const Dashboard = () => {
                                 contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #334155', borderRadius: '8px', color: '#fff' }}
                             />
                             <Legend />
-                            <Bar dataKey="high" name="고위험" stackId="a" fill="#ef4444" barSize={20} />
-                            <Bar dataKey="medium" name="중위험" stackId="a" fill="#f97316" barSize={20} />
-                            <Bar dataKey="low" name="저위험" stackId="a" fill="#22c55e" barSize={20} />
+                            <Bar dataKey="high" name={t('dash.risk_high')} stackId="a" fill="#ef4444" barSize={20} />
+                            <Bar dataKey="medium" name={t('dash.risk_medium')} stackId="a" fill="#f97316" barSize={20} />
+                            <Bar dataKey="low" name={t('dash.risk_low')} stackId="a" fill="#22c55e" barSize={20} />
                         </BarChart>
                     </ResponsiveContainer>
                 </motion.div>
@@ -191,7 +195,7 @@ export const Dashboard = () => {
                 >
                     <div className="flex items-center gap-2 mb-4">
                         <ShieldAlert className="w-5 h-5 text-enterprise-500" />
-                        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">위협 유형별 분포</h2>
+                        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">{t('dash.threat_distribution')}</h2>
                     </div>
                     <div className="flex items-center justify-center">
                         <ResponsiveContainer width="100%" height={240}>
@@ -230,8 +234,8 @@ export const Dashboard = () => {
                 >
                     <div className="flex items-center gap-2 mb-4">
                         <MapPin className="w-5 h-5 text-enterprise-500" />
-                        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">위협 지도</h2>
-                        <span className="text-sm text-gray-600 dark:text-gray-500">(불가능한 이동)</span>
+                        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">{t('dash.threat_map')}</h2>
+                        <span className="text-sm text-gray-600 dark:text-gray-500">({t('dash.impossible_travel')})</span>
                     </div>
                     <div className="relative h-64 bg-gray-100 dark:bg-dark-900 rounded-lg overflow-hidden">
                         {/* Simplified map visualization */}
@@ -254,7 +258,7 @@ export const Dashboard = () => {
                                         </div>
                                         <div className="text-center">
                                             <div className="text-sm text-red-400">
-                                                <span className="font-semibold">{threat.user}</span> | 시간 간격: {threat.timeGap}
+                                                <span className="font-semibold">{threat.user}</span> | {t('dash.time_gap')}: {threat.timeGap}
                                             </div>
                                         </div>
                                     </div>
@@ -273,7 +277,7 @@ export const Dashboard = () => {
                 >
                     <div className="flex items-center gap-2 mb-4">
                         <TrendingUp className="w-5 h-5 text-enterprise-500" />
-                        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">24시간 위험 추세</h2>
+                        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">{t('dash.risk_trend_24h')}</h2>
                     </div>
                     <ResponsiveContainer width="100%" height={240}>
                         <LineChart data={riskTrendData}>
@@ -327,19 +331,19 @@ export const Dashboard = () => {
                         >
                             <div className="flex items-center justify-between mb-6">
                                 <div>
-                                    <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">조직 위험 지수 추세</h2>
+                                    <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{t('dash.trend_title')}</h2>
                                     <div className="flex items-center gap-4 mt-2">
                                         <button
                                             onClick={() => setTrendPeriod('24h')}
                                             className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${trendPeriod === '24h' ? 'bg-enterprise-500 text-white' : 'bg-gray-100 dark:bg-dark-800 text-gray-600 dark:text-gray-400'}`}
                                         >
-                                            24 Hours
+                                            {t('dash.period_24h')}
                                         </button>
                                         <button
                                             onClick={() => setTrendPeriod('30d')}
                                             className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${trendPeriod === '30d' ? 'bg-enterprise-500 text-white' : 'bg-gray-100 dark:bg-dark-800 text-gray-600 dark:text-gray-400'}`}
                                         >
-                                            30 Days
+                                            {t('dash.period_30d')}
                                         </button>
                                     </div>
                                 </div>
@@ -386,15 +390,15 @@ export const Dashboard = () => {
 
                                 <div className="mt-6 grid grid-cols-3 gap-4">
                                     <div className="text-center p-4 bg-gray-50 dark:bg-dark-800 rounded-lg">
-                                        <div className="text-sm text-gray-600 dark:text-gray-400">현재 위험도</div>
+                                        <div className="text-sm text-gray-600 dark:text-gray-400">{t('dash.current_risk')}</div>
                                         <div className="text-2xl font-bold text-orange-500 mt-1">{orgRiskIndex.score}</div>
                                     </div>
                                     <div className="text-center p-4 bg-gray-50 dark:bg-dark-800 rounded-lg">
-                                        <div className="text-sm text-gray-600 dark:text-gray-400">24시간 최고</div>
+                                        <div className="text-sm text-gray-600 dark:text-gray-400">{t('dash.max_24h')}</div>
                                         <div className="text-2xl font-bold text-red-500 mt-1">{Math.max(...riskTrendData.map(d => d.score))}</div>
                                     </div>
                                     <div className="text-center p-4 bg-gray-50 dark:bg-dark-800 rounded-lg">
-                                        <div className="text-sm text-gray-600 dark:text-gray-400">24시간 최저</div>
+                                        <div className="text-sm text-gray-600 dark:text-gray-400">{t('dash.min_24h')}</div>
                                         <div className="text-2xl font-bold text-green-500 mt-1">{Math.min(...riskTrendData.map(d => d.score))}</div>
                                     </div>
                                 </div>

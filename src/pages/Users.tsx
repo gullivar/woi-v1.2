@@ -3,11 +3,13 @@ import { Search, Filter, Download, Eye, AlertCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useData } from '../context/DataContext';
+import { useLanguage } from '../context/LanguageContext';
 
 type FilterType = 'all' | 'high' | 'medium' | 'low';
 
 export const Users = () => {
     const { users } = useData();
+    const { t } = useLanguage();
     const [searchQuery, setSearchQuery] = useState('');
     const [riskFilter, setRiskFilter] = useState<FilterType>('all');
 
@@ -29,16 +31,16 @@ export const Users = () => {
 
     const getRiskBadge = (score: number) => {
         if (score >= 70) {
-            return <span className="px-2 py-1 text-xs font-semibold bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 rounded">High</span>;
+            return <span className="px-2 py-1 text-xs font-semibold bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 rounded">{t('users.risk_high')}</span>;
         } else if (score >= 40) {
-            return <span className="px-2 py-1 text-xs font-semibold bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 rounded">Medium</span>;
+            return <span className="px-2 py-1 text-xs font-semibold bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 rounded">{t('users.risk_medium')}</span>;
         } else {
-            return <span className="px-2 py-1 text-xs font-semibold bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded">Low</span>;
+            return <span className="px-2 py-1 text-xs font-semibold bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded">{t('users.risk_low')}</span>;
         }
     };
 
     const exportToCSV = () => {
-        const headers = ['Name', 'Email', 'Department', 'Risk Score', 'Device', 'Last Seen'];
+        const headers = [t('users.table.user'), 'Email', t('users.table.dept'), t('users.table.score'), t('users.table.device'), t('users.table.last_seen')];
         const rows = filteredUsers.map(user => [
             user.name,
             user.email,
@@ -61,30 +63,30 @@ export const Users = () => {
         <div className="p-6 max-w-7xl mx-auto">
             {/* Header */}
             <div className="mb-6">
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">위험 사용자 관리</h1>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Monitor and manage user risk profiles</p>
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">{t('users.title')}</h1>
+                <p className="text-sm text-gray-600 dark:text-gray-400">{t('users.subtitle')}</p>
             </div>
 
             {/* Stats Cards */}
             <div className="grid grid-cols-4 gap-4 mb-6">
                 <div className="bg-white dark:bg-dark-900 rounded-lg border border-gray-200 dark:border-dark-800 p-4">
-                    <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">Total Users</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('users.total')}</div>
                     <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{users.length}</div>
                 </div>
                 <div className="bg-white dark:bg-dark-900 rounded-lg border border-gray-200 dark:border-dark-800 p-4">
-                    <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">High Risk</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('users.risk_high')}</div>
                     <div className="text-2xl font-bold text-red-600 dark:text-red-400">
                         {users.filter(u => u.riskScore >= 70).length}
                     </div>
                 </div>
                 <div className="bg-white dark:bg-dark-900 rounded-lg border border-gray-200 dark:border-dark-800 p-4">
-                    <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">Medium Risk</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('users.risk_medium')}</div>
                     <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
                         {users.filter(u => u.riskScore >= 40 && u.riskScore < 70).length}
                     </div>
                 </div>
                 <div className="bg-white dark:bg-dark-900 rounded-lg border border-gray-200 dark:border-dark-800 p-4">
-                    <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">Low Risk</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('users.risk_low')}</div>
                     <div className="text-2xl font-bold text-green-600 dark:text-green-400">
                         {users.filter(u => u.riskScore < 40).length}
                     </div>
@@ -100,7 +102,7 @@ export const Users = () => {
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                             <input
                                 type="text"
-                                placeholder="Search users by name, email, or department..."
+                                placeholder={t('users.search_placeholder')}
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-dark-600 rounded-lg bg-white dark:bg-dark-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:ring-2 focus:ring-enterprise-500 focus:border-transparent"
@@ -115,10 +117,10 @@ export const Users = () => {
                                 onChange={(e) => setRiskFilter(e.target.value as FilterType)}
                                 className="px-3 py-2 border border-gray-300 dark:border-dark-600 rounded-lg bg-white dark:bg-dark-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-enterprise-500 focus:border-transparent"
                             >
-                                <option value="all">All Risk Levels</option>
-                                <option value="high">High Risk</option>
-                                <option value="medium">Medium Risk</option>
-                                <option value="low">Low Risk</option>
+                                <option value="all">{t('users.filter_all')}</option>
+                                <option value="high">{t('users.risk_high')}</option>
+                                <option value="medium">{t('users.risk_medium')}</option>
+                                <option value="low">{t('users.risk_low')}</option>
                             </select>
                         </div>
 
@@ -128,7 +130,7 @@ export const Users = () => {
                             className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-dark-700 border border-gray-300 dark:border-dark-600 rounded-lg hover:bg-gray-50 dark:hover:bg-dark-600 transition-colors"
                         >
                             <Download className="w-4 h-4" />
-                            Export CSV
+                            {t('users.export')}
                         </button>
                     </div>
                 </div>
@@ -136,8 +138,7 @@ export const Users = () => {
                 {/* Results Count */}
                 <div className="px-4 py-2 bg-gray-50 dark:bg-dark-800/50 border-b border-gray-200 dark:border-dark-800">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                        Showing <span className="font-semibold text-gray-900 dark:text-gray-100">{filteredUsers.length}</span> of{' '}
-                        <span className="font-semibold text-gray-900 dark:text-gray-100">{users.length}</span> users
+                        {t('users.showing').replace('{count}', filteredUsers.length.toString()).replace('{total}', users.length.toString())}
                     </p>
                 </div>
 
@@ -147,25 +148,25 @@ export const Users = () => {
                         <thead className="bg-gray-50 dark:bg-dark-800">
                             <tr>
                                 <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
-                                    User
+                                    {t('users.table.user')}
                                 </th>
                                 <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
-                                    Department
+                                    {t('users.table.dept')}
                                 </th>
                                 <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
-                                    Risk Score
+                                    {t('users.table.score')}
                                 </th>
                                 <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
-                                    Device
+                                    {t('users.table.device')}
                                 </th>
                                 <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
-                                    Last Seen
+                                    {t('users.table.last_seen')}
                                 </th>
                                 <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
-                                    Alerts
+                                    {t('users.table.alerts')}
                                 </th>
                                 <th className="px-4 py-3 text-right text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
-                                    Actions
+                                    {t('users.table.actions')}
                                 </th>
                             </tr>
                         </thead>
@@ -219,7 +220,7 @@ export const Users = () => {
                                             className="inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium text-enterprise-600 dark:text-enterprise-400 hover:bg-enterprise-500/10 rounded-lg transition-colors"
                                         >
                                             <Eye className="w-4 h-4" />
-                                            View Details
+                                            {t('users.view_details')}
                                         </Link>
                                     </td>
                                 </motion.tr>
@@ -234,9 +235,9 @@ export const Users = () => {
                         <div className="text-gray-400 mb-2">
                             <Search className="w-12 h-12 mx-auto" />
                         </div>
-                        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-1">No users found</h3>
+                        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-1">{t('users.no_found')}</h3>
                         <p className="text-sm text-gray-600 dark:text-gray-400">
-                            Try adjusting your search or filter criteria
+                            {t('users.no_found_desc')}
                         </p>
                     </div>
                 )}

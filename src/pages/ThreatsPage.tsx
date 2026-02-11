@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { useData } from '../context/DataContext';
+import { useLanguage } from '../context/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AlertTriangle, TrendingUp, X, Eye, Brain } from 'lucide-react';
 import { ImpossibleTravelWidget, AppInstallSpikeWidget, OSOutdatedWidget, CompromisedStatusWidget, AnomalousSequenceWidget, AbnormalTimeAccessWidget, DataUsageAnomalyWidget, VulnerabilityWidget, SecurityComplianceWidget, ProhibitedAppWidget } from '../components/ThreatEvidence/EvidenceWidgets';
-import type { Alert } from '../data/mockData';
 
 export const ThreatsPage = () => {
     const { users } = useData();
+    const { t, language } = useLanguage();
     const [selectedAlert, setSelectedAlert] = useState<any>(null);
 
     // Get all alerts from all users
@@ -45,33 +46,54 @@ export const ThreatsPage = () => {
 
         return (
             <div className="p-8 text-center text-gray-500 bg-gray-50 dark:bg-dark-800 rounded-lg border border-dashed border-gray-300 dark:border-dark-700">
-                No specific visualization available for this rule type.
+                {t('threats.no_evidence')}
             </div>
         );
     };
 
     const getXAISummary = (alert: any) => {
-        // Mock XAI generation based on rule type
-        if (alert.ruleName.includes('Impossible Travel')) return "사용자의 이전 접속 위치(서울)와 현재 접속 위치(뉴욕) 간의 물리적 이동 속도가 66,000km/h로 계산되어, 정상적인 이동 범위를 벗어났습니다.";
-        if (alert.ruleName.includes('App Install')) return "지난 30일 평균 일일 앱 설치 수는 0.5개이나, 오늘 25개의 앱이 단시간에 설치되어 비정상적인 패턴으로 탐지되었습니다.";
-        if (alert.ruleName.includes('OS Version')) return "사용자의 기기 OS 버전(v14)은 조직 내 하위 5%에 해당하며, 알려진 보안 취약점(CVE-2023-XXXX)에 노출될 위험이 높습니다.";
-        if (alert.ruleName.includes('Compromised')) return "단말에서 'su' 바이너리와 'Magisk Manager' 앱이 발견되었습니다. 이는 기기가 루팅되었음을 강력하게 시사합니다.";
-        if (alert.ruleName.includes('Sequence')) return "평소 '로그인 -> 이메일 확인 -> 로그아웃' 패턴과 달리, '로그인 -> 관리자 페이지 -> DB 다운로드'라는 희귀한 행동 순서(0.01%)가 관찰되었습니다.";
-        return "평소와 다른 패턴으로 인해 탐지되었습니다. (AI 분석 결과)";
+        if (alert.ruleName.includes('Impossible Travel')) {
+            return t('threats.xai.impossible_travel')
+                .replace('{prev}', language === 'ko' ? '서울' : 'Seoul')
+                .replace('{curr}', language === 'ko' ? '뉴욕' : 'New York')
+                .replace('{speed}', '66,000');
+        }
+        if (alert.ruleName.includes('App Install')) {
+            return t('threats.xai.app_install')
+                .replace('{avg}', '0.5')
+                .replace('{count}', '25');
+        }
+        if (alert.ruleName.includes('OS Version')) {
+            return t('threats.xai.os_version')
+                .replace('{v}', 'v14')
+                .replace('{cve}', 'CVE-2023-XXXX');
+        }
+        if (alert.ruleName.includes('Compromised')) {
+            return t('threats.xai.compromised');
+        }
+        if (alert.ruleName.includes('Sequence')) {
+            return t('threats.xai.sequence')
+                .replace('{prob}', '0.01');
+        }
+        return t('threats.xai.default');
+    };
+
+    const formatDate = (dateString: string) => {
+        return new Date(dateString).toLocaleString(language === 'ko' ? 'ko-KR' : 'en-US');
     };
 
     return (
         <div className="p-8 space-y-6">
             {/* Header */}
             <div>
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">위협 탐지</h1>
-                <p className="text-gray-600 dark:text-gray-400 mt-1">Threat Detection Timeline</p>
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">{t('threats.title')}</h1>
+                <p className="text-gray-600 dark:text-gray-400 mt-1">{t('threats.subtitle')}</p>
             </div>
 
             {/* Stats */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 {[
-                    { label: '전체 알림', value: allAlerts.length, color: 'text-blue-500' },
+                    { label: t('threats.all_alerts'), value: allAlerts.length, color: 'text-blue-500' },
                     { label: 'Critical', value: allAlerts.filter(a => a.severity === 'Critical').length, color: 'text-red-500' },
                     { label: 'High', value: allAlerts.filter(a => a.severity === 'High').length, color: 'text-orange-500' },
                     { label: 'Medium', value: allAlerts.filter(a => a.severity === 'Medium').length, color: 'text-yellow-500' },
@@ -93,7 +115,7 @@ export const ThreatsPage = () => {
             <div className="glass-effect rounded-xl p-6 border border-gray-200 dark:border-white/10">
                 <div className="flex items-center gap-2 mb-6">
                     <TrendingUp className="w-5 h-5 text-enterprise-500" />
-                    <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">실시간 위협 타임라인</h2>
+                    <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">{t('threats.timeline_title')}</h2>
                 </div>
 
                 <div className="space-y-3">
@@ -116,22 +138,22 @@ export const ThreatsPage = () => {
                                     </div>
                                     <div className="text-sm text-gray-700 dark:text-gray-300 mb-2">{alert.details}</div>
                                     <div className="flex items-center gap-4 text-xs text-gray-600 dark:text-gray-500">
-                                        <span>사용자: <span className="font-medium text-gray-900 dark:text-gray-100">{alert.userName}</span></span>
-                                        <span>부서: {alert.userDepartment}</span>
-                                        <span>위험점수: <span className="font-medium text-red-500">{alert.userRiskScore}</span></span>
-                                        <span>{new Date(alert.timestamp).toLocaleString('ko-KR')}</span>
+                                        <span>{t('threats.user')}: <span className="font-medium text-gray-900 dark:text-gray-100">{alert.userName}</span></span>
+                                        <span>{t('threats.dept')}: {alert.userDepartment}</span>
+                                        <span>{t('threats.risk_score')}: <span className="font-medium text-red-500">{alert.userRiskScore}</span></span>
+                                        <span>{formatDate(alert.timestamp)}</span>
                                     </div>
                                 </div>
                                 <div className="text-right">
                                     <div className={`text-2xl font-bold ${getSeverityColor(alert.severity).split(' ')[0]}`}>
                                         {alert.score}
                                     </div>
-                                    <div className="text-xs text-gray-600 dark:text-gray-500">점수</div>
+                                    <div className="text-xs text-gray-600 dark:text-gray-500">{t('threats.score_unit')}</div>
                                     <button
                                         onClick={() => setSelectedAlert(alert)}
                                         className="mt-2 flex items-center gap-1 text-xs px-3 py-1.5 bg-enterprise-500 hover:bg-enterprise-600 text-white rounded transition-colors"
                                     >
-                                        <Eye className="w-3 h-3" /> 상세 분석
+                                        <Eye className="w-3 h-3" /> {t('threats.view_analysis')}
                                     </button>
                                 </div>
                             </div>
@@ -167,7 +189,7 @@ export const ThreatsPage = () => {
                                     <div>
                                         <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">{selectedAlert.ruleName}</h2>
                                         <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                                            <span>{new Date(selectedAlert.timestamp).toLocaleString('ko-KR')}</span>
+                                            <span>{formatDate(selectedAlert.timestamp)}</span>
                                             <span>•</span>
                                             <span className="font-mono">{selectedAlert.ruleId}</span>
                                         </div>
@@ -185,21 +207,21 @@ export const ThreatsPage = () => {
                                 {/* Common Header Info */}
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                     <div className="p-4 bg-gray-50 dark:bg-dark-800 rounded-lg border border-gray-200 dark:border-dark-700">
-                                        <div className="text-sm text-gray-500 mb-1">User</div>
+                                        <div className="text-sm text-gray-500 mb-1">{t('threats.user')}</div>
                                         <div className="font-semibold text-gray-900 dark:text-gray-100 text-lg">{selectedAlert.userName}</div>
                                         <div className="text-xs text-gray-500">{selectedAlert.userDepartment}</div>
                                     </div>
                                     <div className="p-4 bg-gray-50 dark:bg-dark-800 rounded-lg border border-gray-200 dark:border-dark-700">
-                                        <div className="text-sm text-gray-500 mb-1">Risk Score</div>
+                                        <div className="text-sm text-gray-500 mb-1">{t('threats.risk_score')}</div>
                                         <div className={`font-bold text-2xl ${getSeverityColor(selectedAlert.severity).split(' ')[0]}`}>
                                             {selectedAlert.score}
                                         </div>
                                         <div className="text-xs text-gray-500">Severity: {selectedAlert.severity}</div>
                                     </div>
                                     <div className="p-4 bg-gray-50 dark:bg-dark-800 rounded-lg border border-gray-200 dark:border-dark-700">
-                                        <div className="text-sm text-gray-500 mb-1">Status</div>
-                                        <div className="font-semibold text-orange-500 text-lg">Open</div>
-                                        <div className="text-xs text-gray-500">Assigned to: Unassigned</div>
+                                        <div className="text-sm text-gray-500 mb-1">{t('threats.status')}</div>
+                                        <div className="font-semibold text-orange-500 text-lg">{t('threats.open')}</div>
+                                        <div className="text-xs text-gray-500">{t('threats.assigned')}: {t('threats.unassigned')}</div>
                                     </div>
                                 </div>
 
@@ -208,7 +230,7 @@ export const ThreatsPage = () => {
                                     <div className="flex items-start gap-3">
                                         <Brain className="w-6 h-6 text-enterprise-500 mt-1" />
                                         <div>
-                                            <h3 className="font-semibold text-enterprise-600 dark:text-enterprise-400 mb-1">AI Analysis Summary</h3>
+                                            <h3 className="font-semibold text-enterprise-600 dark:text-enterprise-400 mb-1">{t('threats.ai_summary_title')}</h3>
                                             <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
                                                 {getXAISummary(selectedAlert)}
                                             </p>
@@ -220,14 +242,14 @@ export const ThreatsPage = () => {
                                 <div>
                                     <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center gap-2">
                                         <TrendingUp className="w-5 h-5 text-gray-500" />
-                                        Evidence & Visualization
+                                        {t('threats.evidence_title')}
                                     </h3>
                                     {renderEvidenceWidget(selectedAlert.ruleName, selectedAlert)}
                                 </div>
 
                                 {/* Raw Details */}
                                 <div>
-                                    <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">Raw Details</h3>
+                                    <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">{t('threats.raw_details')}</h3>
                                     <div className="bg-gray-100 dark:bg-dark-950 p-4 rounded-lg border border-gray-200 dark:border-dark-700 font-mono text-sm text-gray-700 dark:text-gray-300">
                                         {selectedAlert.details}
                                     </div>
