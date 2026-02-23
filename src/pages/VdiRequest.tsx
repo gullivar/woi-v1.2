@@ -11,6 +11,8 @@ const OS_TYPES: { type: OSType; label: string; icon: string; color: string }[] =
     { type: 'AND_P4', label: 'AND_P4', icon: 'M17.523 15.3414C17.523 15.3414 17.523 15.3414 17.523 15.3414ZM17.523 15.3414C17.523 15.3414 17.523 15.3414 17.523 15.3414ZM17.523 15.3414C17.523 15.3414 17.523 15.3414 17.523 15.3414Z', color: 'text-[#A4C639]' },
 ];
 
+const SMART_GROUPS = ['SmartGrp01', 'SmartGrp02', 'SmartGrp03'];
+
 interface Applicant {
     id: string;
     name: string;
@@ -37,7 +39,7 @@ export const VdiRequest = () => {
     const [submissionComment, setSubmissionComment] = useState(t('modal.default_comment'));
 
     // 신청자 관련 상태
-    const [applicantInput, setApplicantInput] = useState('');
+    const [selectedSmartGroup, setSelectedSmartGroup] = useState<string>('');
     const [applicants, setApplicants] = useState<Applicant[]>([]);
 
     // 결재선 관련 상태
@@ -49,15 +51,15 @@ export const VdiRequest = () => {
         setTitle(t('mock.default_title'));
         setReason(t('mock.default_reason'));
         setSubmissionComment(t('modal.default_comment'));
-        setApplicantInput('');
+        setSelectedSmartGroup('');
         setApproverInput(language === 'ko' ? '성훈' : 'David');
 
         setApplicants([
             {
                 id: '1',
-                name: 'SmartGrp01(james.wilson)',
+                name: 'Admin',
                 department: 'R&D Part',
-                pcType: 'Android Profile',
+                pcType: 'SmartGrp01',
                 startDate: '2026-02-09',
                 endDate: '2027-02-09',
             }
@@ -71,17 +73,17 @@ export const VdiRequest = () => {
     }, [language, t]);
 
     const addApplicant = () => {
-        if (!applicantInput.trim()) return;
+        if (!selectedSmartGroup) return;
         const newApplicant: Applicant = {
-            id: Date.now().toString(),
-            name: `${applicantInput}(${applicantInput.toLowerCase()}${t('mock.user_suffix')})`,
-            department: t('mock.dept_auto'),
-            pcType: t('mock.pc_type_1'),
+            id: Math.random().toString(36).substr(2, 9),
+            name: 'Admin',
+            department: 'R&D Part',
+            pcType: selectedSmartGroup,
             startDate: globalStartDate,
             endDate: globalEndDate,
         };
         setApplicants([...applicants, newApplicant]);
-        setApplicantInput('');
+        setSelectedSmartGroup('');
     };
 
     const removeApplicant = (id: string) => {
@@ -217,12 +219,16 @@ export const VdiRequest = () => {
                     <div className="bg-blue-50/50 dark:bg-blue-900/10 p-3 rounded flex items-center gap-6">
                         <div className="flex items-center gap-2">
                             <span>{t('vdi.form.name_id')}</span>
-                            <input
-                                type="text"
-                                value={applicantInput}
-                                onChange={(e) => setApplicantInput(e.target.value)}
-                                className="w-24 px-2 py-1 border border-gray-300 dark:border-dark-700 rounded bg-white dark:bg-dark-900"
-                            />
+                            <select
+                                value={selectedSmartGroup}
+                                onChange={(e) => setSelectedSmartGroup(e.target.value)}
+                                className="w-32 px-2 py-1 border border-gray-300 dark:border-dark-700 rounded bg-white dark:bg-dark-900"
+                            >
+                                <option value="">Select...</option>
+                                {SMART_GROUPS.map(group => (
+                                    <option key={group} value={group}>{group}</option>
+                                ))}
+                            </select>
                             <button
                                 onClick={addApplicant}
                                 className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
@@ -284,7 +290,7 @@ export const VdiRequest = () => {
                                     </td>
                                     <td className="border border-gray-200 dark:border-dark-800 p-2 text-center">
                                         <span className="text-blue-600 font-bold">
-                                            SmartGrp01
+                                            {a.pcType}
                                         </span>
                                     </td>
                                     <td className="border border-gray-200 dark:border-dark-800 p-2">
