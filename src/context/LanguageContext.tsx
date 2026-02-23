@@ -15,7 +15,7 @@ const translations: Record<Language, Record<string, string>> = {
         'nav.dashboard': '대시보드',
         'nav.users': '위험 사용자',
         'nav.threats': '위협 탐지',
-        'nav.vdi': 'VDI 신청',
+        'nav.vdi': 'Profile Request',
         'nav.rules': '탐지 규칙',
         'nav.automation': '자동화',
         'nav.settings': '설정',
@@ -25,7 +25,7 @@ const translations: Record<Language, Record<string, string>> = {
         'toggle.theme': '다크 모드',
 
         // VDI Page
-        'vdi.title': 'VDI 신청',
+        'vdi.title': 'Profile Request',
         'vdi.subtitle': '신청서를 작성하신 후 결제완료되면 가상 PC 생성이 시작됩니다. (가상 PC 생성은 1시간 가량 소요됩니다. 생성시작, 생성완료시 사용자에게 안내메일이 발송됩니다.)',
         'vdi.form.title': '신청 제목',
         'vdi.form.reason': '신청 사유',
@@ -186,7 +186,7 @@ const translations: Record<Language, Record<string, string>> = {
         'nav.dashboard': 'Dashboard',
         'nav.users': 'Risk Users',
         'nav.threats': 'Threat Detection',
-        'nav.vdi': 'VDI Request',
+        'nav.vdi': 'Profile Request',
         'nav.rules': 'Rules',
         'nav.automation': 'Automation',
         'nav.settings': 'Settings',
@@ -196,7 +196,7 @@ const translations: Record<Language, Record<string, string>> = {
         'toggle.theme': 'Dark Mode',
 
         // VDI Page
-        'vdi.title': 'VDI Request',
+        'vdi.title': 'Profile Request',
         'vdi.subtitle': 'After filling out the application and completing payment, virtual PC creation will begin. (It takes about an hour. Notification emails will be sent at start and completion.)',
         'vdi.form.title': 'Request Title',
         'vdi.form.reason': 'Request Reason',
