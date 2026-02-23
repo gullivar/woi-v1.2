@@ -37,7 +37,7 @@ export const VdiRequest = () => {
     const [submissionComment, setSubmissionComment] = useState(t('modal.default_comment'));
 
     // 신청자 관련 상태
-    const [applicantInput, setApplicantInput] = useState('Smart Group01');
+    const [applicantInput, setApplicantInput] = useState('');
     const [applicants, setApplicants] = useState<Applicant[]>([]);
 
     // 결재선 관련 상태
@@ -49,13 +49,13 @@ export const VdiRequest = () => {
         setTitle(t('mock.default_title'));
         setReason(t('mock.default_reason'));
         setSubmissionComment(t('modal.default_comment'));
-        setApplicantInput('Smart Group01');
+        setApplicantInput('');
         setApproverInput(language === 'ko' ? '성훈' : 'David');
 
         setApplicants([
             {
                 id: '1',
-                name: 'James Wilson(james.wilson)',
+                name: 'SmartGrp01(james.wilson)',
                 department: 'R&D Part',
                 pcType: 'Android Profile',
                 startDate: '2026-02-09',
@@ -284,7 +284,7 @@ export const VdiRequest = () => {
                                     </td>
                                     <td className="border border-gray-200 dark:border-dark-800 p-2 text-center">
                                         <span className="text-blue-600 font-bold">
-                                            Smart Group01
+                                            SmartGrp01
                                         </span>
                                     </td>
                                     <td className="border border-gray-200 dark:border-dark-800 p-2">
