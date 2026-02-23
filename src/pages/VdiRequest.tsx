@@ -37,7 +37,7 @@ export const VdiRequest = () => {
     const [submissionComment, setSubmissionComment] = useState(t('modal.default_comment'));
 
     // 신청자 관련 상태
-    const [applicantInput, setApplicantInput] = useState('James Wilson');
+    const [applicantInput, setApplicantInput] = useState('Smart Group01');
     const [applicants, setApplicants] = useState<Applicant[]>([]);
 
     // 결재선 관련 상태
@@ -49,7 +49,7 @@ export const VdiRequest = () => {
         setTitle(t('mock.default_title'));
         setReason(t('mock.default_reason'));
         setSubmissionComment(t('modal.default_comment'));
-        setApplicantInput('James Wilson');
+        setApplicantInput('Smart Group01');
         setApproverInput(language === 'ko' ? '성훈' : 'David');
 
         setApplicants([
@@ -279,12 +279,12 @@ export const VdiRequest = () => {
                                     <td className="border border-gray-200 dark:border-dark-800 p-2">{a.department}</td>
                                     <td className="border border-gray-200 dark:border-dark-800 p-2 text-center">
                                         <span className="text-[11px] font-medium text-gray-700">
-                                            {selectedOS ? t(`vdi.form.${selectedOS}`).split(' [')[0] : '-'}
+                                            {selectedOS ? (t(`vdi.form.${selectedOS}`).split('[')[1]?.replace(']', '') || '-') : '-'}
                                         </span>
                                     </td>
                                     <td className="border border-gray-200 dark:border-dark-800 p-2 text-center">
                                         <span className="text-blue-600 font-bold">
-                                            {selectedOS ? t(`vdi.form.${selectedOS}`).split(' [')[0] : '-'}
+                                            Smart Group01
                                         </span>
                                     </td>
                                     <td className="border border-gray-200 dark:border-dark-800 p-2">
