@@ -2,8 +2,9 @@
 > woi-onprem-mockup@0.0.0 dev
 > vite --port 5173
 
+Re-optimizing dependencies because vite config has changed
 
-  VITE v5.4.21  ready in 362 ms
+  VITE v5.4.21  ready in 2038 ms
 
-  ➜  Local:   http://localhost:5173/
+  ➜  Local:   http://localhost:5173/woi-v1.2/
   ➜  Network: use --host to expose

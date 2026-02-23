@@ -4,13 +4,11 @@ import { cn } from '../lib/utils';
 import type { OSType, ApplicationType, Approver } from '../types/vdi';
 import { useLanguage } from '../context/LanguageContext';
 
-const OS_TYPES: { type: OSType; label: string; icon: string; brand: string }[] = [
-    { type: 'CD_EDU', label: 'CO-EDU', icon: 'Windows', brand: 'bg-cyan-500' },
-    { type: 'DEV', label: 'DEV', icon: 'Windows', brand: 'bg-blue-500' },
-    { type: 'DEV_SUPPORT', label: 'development_support', icon: 'Windows', brand: 'bg-sky-500' },
-    { type: 'CUSTOMER_SUPPORT', label: 'customer_support', icon: 'Windows', brand: 'bg-indigo-500' },
-    { type: 'BACKEND_SUPPORT', label: 'backend_support', icon: 'Windows', brand: 'bg-cyan-600' },
-    { type: 'VCOMM_OPS', label: 'vcomm_ops', icon: 'Windows', brand: 'bg-blue-600' },
+const OS_TYPES: { type: OSType; label: string; icon: string; color: string }[] = [
+    { type: 'WIN_P1', label: 'WIN_P1', icon: 'M0 3.449L9.75 2.1V11.719H0V3.449zm0 9.15L9.75 12.6V22.219L0 20.869V12.599zm10.65-10.74L24 0V11.719H10.65V1.859zm0 10.74L24 12.6V24L10.65 22.35V12.599z', color: 'text-[#00A4EF]' },
+    { type: 'MAC_P2', label: 'MAC_P2', icon: 'M12.152 6.896c-.548 0-1.711-.516-2.422-.516-1.147 0-2.227.662-2.813 1.685-1.182 2.067-.303 5.123.849 6.773.564.81 1.238 1.717 2.11 1.685.836-.032 1.154-.543 2.162-.543 1.006 0 1.29.543 2.176.527.899-.016 1.488-.826 2.046-1.637.643-.938.913-1.847.928-1.896-.02-.008-1.776-.682-1.794-2.696-.016-1.684 1.378-2.492 1.442-2.532-.786-1.154-1.996-1.284-2.422-1.308-1.071-.087-2.112.594-2.662.594V6.896zm.268-1.13c.451-.54 1.545-1.308 1.944-1.308 0 0 .151 1.62-.636 2.503-.492.548-1.462 1.147-1.936 1.147 0 0-.256-1.821.628-2.342z', color: 'text-gray-900 dark:text-white' },
+    { type: 'IOS_P3', label: 'IOS_P3', icon: 'M12.152 6.896c-.548 0-1.711-.516-2.422-.516-1.147 0-2.227.662-2.813 1.685-1.182 2.067-.303 5.123.849 6.773.564.81 1.238 1.717 2.11 1.685.836-.032 1.154-.543 2.162-.543 1.006 0 1.29.543 2.176.527.899-.016 1.488-.826 2.046-1.637.643-.938.913-1.847.928-1.896-.02-.008-1.776-.682-1.794-2.696-.016-1.684 1.378-2.492 1.442-2.532-.786-1.154-1.996-1.284-2.422-1.308-1.071-.087-2.112.594-2.662.594V6.896zm.268-1.13c.451-.54 1.545-1.308 1.944-1.308 0 0 .151 1.62-.636 2.503-.492.548-1.462 1.147-1.936 1.147 0 0-.256-1.821.628-2.342z', color: 'text-gray-900 dark:text-white' },
+    { type: 'AND_P4', label: 'AND_P4', icon: 'M17.523 15.3414C17.523 15.3414 17.523 15.3414 17.523 15.3414ZM17.523 15.3414C17.523 15.3414 17.523 15.3414 17.523 15.3414ZM17.523 15.3414C17.523 15.3414 17.523 15.3414 17.523 15.3414Z', color: 'text-[#A4C639]' },
 ];
 
 interface Applicant {
@@ -27,7 +25,7 @@ export const VdiRequest = () => {
 
     const [title, setTitle] = useState(t('mock.default_title'));
     const [reason, setReason] = useState(t('mock.default_reason'));
-    const [selectedOS, setSelectedOS] = useState<OSType | null>('CUSTOMER_SUPPORT');
+    const [selectedOS, setSelectedOS] = useState<OSType | null>('AND_P4');
     const [globalStartDate, setGlobalStartDate] = useState('2026-02-09');
     const [globalEndDate, setGlobalEndDate] = useState('2027-02-09');
     const [executionDate, setExecutionDate] = useState('2026-02-09');
@@ -39,7 +37,7 @@ export const VdiRequest = () => {
     const [submissionComment, setSubmissionComment] = useState(t('modal.default_comment'));
 
     // 신청자 관련 상태
-    const [applicantInput, setApplicantInput] = useState(language === 'ko' ? '장호' : 'James');
+    const [applicantInput, setApplicantInput] = useState('James Wilson');
     const [applicants, setApplicants] = useState<Applicant[]>([]);
 
     // 결재선 관련 상태
@@ -51,15 +49,15 @@ export const VdiRequest = () => {
         setTitle(t('mock.default_title'));
         setReason(t('mock.default_reason'));
         setSubmissionComment(t('modal.default_comment'));
-        setApplicantInput(language === 'ko' ? '장호' : 'James');
+        setApplicantInput('James Wilson');
         setApproverInput(language === 'ko' ? '성훈' : 'David');
 
         setApplicants([
             {
                 id: '1',
-                name: t('mock.applicant_1'),
-                department: t('mock.dept_1'),
-                pcType: t('mock.pc_type_1'),
+                name: 'James Wilson(james.wilson)',
+                department: 'R&D Part',
+                pcType: 'Android Profile',
                 startDate: '2026-02-09',
                 endDate: '2027-02-09',
             }
@@ -169,30 +167,41 @@ export const VdiRequest = () => {
                         </button>
                     </div>
                     <div className="grid grid-cols-4 gap-4 pt-2">
-                        {OS_TYPES.map((os) => (
-                            <button
-                                key={os.type}
-                                onClick={() => setSelectedOS(os.type)}
-                                className={cn(
-                                    "relative group h-24 border rounded flex items-center justify-center gap-3 transition-all",
-                                    selectedOS === os.type
-                                        ? "border-blue-500 ring-2 ring-blue-500 ring-offset-2"
-                                        : "border-gray-200 dark:border-dark-800 bg-gray-50 dark:bg-dark-900 hover:border-gray-300"
-                                )}
-                            >
-                                <div className={cn("p-1.5 rounded", os.brand)}>
-                                    <div className="w-5 h-5 flex items-center justify-center">
-                                        <svg viewBox="0 0 24 24" className="w-4 h-4 fill-white"><path d="M0 3.449L9.75 2.1V11.719H0V3.449zm0 9.15L9.75 12.6V22.219L0 20.869V12.599zm10.65-10.74L24 0V11.719H10.65V1.859zm0 10.74L24 12.6V24L10.65 22.35V12.599z" /></svg>
+                        {OS_TYPES.map((os) => {
+                            const label = t(`vdi.form.${os.type}`);
+                            const [name, id] = label.split(' [');
+                            return (
+                                <button
+                                    key={os.type}
+                                    onClick={() => setSelectedOS(os.type)}
+                                    className={cn(
+                                        "relative group flex items-center justify-start px-6 gap-6 h-28 border-2 rounded-xl transition-all shadow-sm",
+                                        selectedOS === os.type
+                                            ? "border-[#002B49] bg-white dark:bg-dark-900"
+                                            : "border-gray-200 dark:border-dark-800 bg-white dark:bg-dark-950 opacity-80 hover:opacity-100 hover:border-gray-300"
+                                    )}
+                                >
+                                    <div className={cn("w-14 h-14 flex items-center justify-center", os.color)}>
+                                        <svg viewBox="0 0 24 24" className="w-12 h-12 fill-current">
+                                            {os.type === 'AND_P4' ? (
+                                                <path d="M7 11V16H8V11H7ZM16 11V16H17V11H16ZM9.17 6.42L10.1 7.35C10.7 7.12 11.34 7 12 7C12.66 7 13.3 7.12 13.9 7.35L14.83 6.42C14.97 6.28 15.19 6.28 15.33 6.42C15.47 6.56 15.47 6.78 15.33 6.92L14.47 7.78C15.4 8.6 16.08 9.72 16.33 11H7.67C7.92 9.72 8.6 8.6 9.53 7.78L8.67 6.92C8.53 6.78 8.53 6.56 8.67 6.42C8.81 6.28 9.03 6.28 9.17 6.42ZM7 12H17V17H7V12Z" />
+                                            ) : (
+                                                <path d={os.icon} />
+                                            )}
+                                        </svg>
                                     </div>
-                                </div>
-                                <span className="text-xs font-bold text-blue-800 dark:text-blue-300">{t(`vdi.form.${os.label}`)}</span>
-                                {selectedOS === os.type && (
-                                    <div className="absolute top-0 right-0 p-1">
-                                        <Check className="w-3 h-3 text-blue-500" />
+                                    <div className="flex flex-col items-start gap-1">
+                                        <span className="text-xl font-black text-gray-900 dark:text-gray-100 leading-tight">{name}</span>
+                                        <span className="text-sm font-bold text-gray-600 dark:text-gray-400">[{id}</span>
                                     </div>
-                                )}
-                            </button>
-                        ))}
+                                    {selectedOS === os.type && (
+                                        <div className="absolute top-4 right-4">
+                                            <Check className="w-5 h-5 text-green-500 font-bold" />
+                                        </div>
+                                    )}
+                                </button>
+                            );
+                        })}
                     </div>
                 </div>
             </section>
@@ -269,14 +278,14 @@ export const VdiRequest = () => {
                                     <td className="border border-gray-200 dark:border-dark-800 p-2">{a.name}</td>
                                     <td className="border border-gray-200 dark:border-dark-800 p-2">{a.department}</td>
                                     <td className="border border-gray-200 dark:border-dark-800 p-2 text-center">
-                                        <select className="border-none bg-transparent outline-none py-1">
-                                            <option>{t('vdi.form.work_type')}</option>
-                                        </select>
+                                        <span className="text-[11px] font-medium text-gray-700">
+                                            {selectedOS ? t(`vdi.form.${selectedOS}`).split(' [')[0] : '-'}
+                                        </span>
                                     </td>
                                     <td className="border border-gray-200 dark:border-dark-800 p-2 text-center">
-                                        <select className="border-none bg-transparent outline-none py-1 text-blue-600 font-bold">
-                                            <option>{a.pcType}</option>
-                                        </select>
+                                        <span className="text-blue-600 font-bold">
+                                            {selectedOS ? t(`vdi.form.${selectedOS}`).split(' [')[0] : '-'}
+                                        </span>
                                     </td>
                                     <td className="border border-gray-200 dark:border-dark-800 p-2">
                                         <input type="date" value={a.startDate} className="w-full border-none bg-transparent outline-none" readOnly />

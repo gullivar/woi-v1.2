@@ -1,12 +1,10 @@
 // VDI 신청 타입 정의
 
 export type OSType =
-    | 'CD_EDU'
-    | 'DEV'
-    | 'DEV_SUPPORT'
-    | 'CUSTOMER_SUPPORT'
-    | 'BACKEND_SUPPORT'
-    | 'VCOMM_OPS';
+    | 'WIN_P1'
+    | 'MAC_P2'
+    | 'IOS_P3'
+    | 'AND_P4';
 
 export type ApplicationType =
     | 'NEW'
@@ -52,12 +50,10 @@ export interface VDIRequest {
 }
 
 export const OS_TYPE_LABELS: Record<OSType, string> = {
-    CD_EDU: 'CD EDU',
-    DEV: 'DEV',
-    DEV_SUPPORT: '개발환경/보조업무',
-    CUSTOMER_SUPPORT: '고객센터/보조업무',
-    BACKEND_SUPPORT: '백엔드/보조업무',
-    VCOMM_OPS: 'vComm/운영 지원',
+    WIN_P1: 'Windows Profile',
+    MAC_P2: 'macOS Profile',
+    IOS_P3: 'iOS Profile',
+    AND_P4: 'Android Profile',
 };
 
 export const APPLICATION_TYPE_LABELS: Record<ApplicationType, string> = {
