@@ -31,7 +31,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         { name: t('nav.dashboard'), href: '/', icon: LayoutDashboard },
         { name: t('nav.users'), href: '/users', icon: UsersIcon },
         { name: t('nav.threats'), href: '/threats', icon: AlertTriangle },
-        { name: t('nav.vdi'), href: '/vdi-request', icon: ShieldCheck },
+        { name: t('nav.vdi'), href: '/profile-request', icon: ShieldCheck },
         { name: t('nav.rules'), href: '/rules', icon: FileCode },
         { name: t('nav.automation'), href: '/automation', icon: Workflow },
         { name: t('nav.settings'), href: '/settings', icon: SettingsIcon },

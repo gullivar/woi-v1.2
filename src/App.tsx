@@ -28,7 +28,7 @@ function App() {
                 <Route path="/rules" element={<RuleEditor />} />
                 <Route path="/automation" element={<PlaybookEditor />} />
                 <Route path="/threats" element={<ThreatsPage />} />
-                <Route path="/vdi-request" element={<VdiRequest />} />
+                <Route path="/profile-request" element={<VdiRequest />} />
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/search" element={<SearchResults />} />
                 <Route path="/notifications" element={<Notifications />} />
